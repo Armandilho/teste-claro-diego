@@ -25,6 +25,9 @@ const searchStatus = $('#search-status');
 const resultList = $('#results');
 const searchIconContainer = $('#search-icon-container');
 
+searchInput.hidden = true;
+clearBtn.hidden = true;
+
 const setStatus = (msg = '') => (searchStatus.textContent = msg);
 
 const getPlaceholderPoster = () => {
@@ -33,9 +36,22 @@ const getPlaceholderPoster = () => {
 };
 
 const expandInputByIconClick = () => {
-  searchInput.setAttribute('style', 'max-width: 500px; display: block;');
-  searchIconContainer.setAttribute('style', 'display: none;');
+  if(searchIconContainer.hidden === false){
+    searchInput.hidden = false;
+    clearBtn.hidden = false;
+    searchIconContainer.hidden = true;
+    searchInput.focus();
+  }
 }
+
+function hideOnClickOutside() {
+  if(searchIconContainer.hidden === true){
+    searchInput.hidden = true;
+    clearBtn.hidden = true;
+    searchIconContainer.hidden = false;
+  }
+}
+
 
 const renderResults = items => {
   resultList.innerHTML = '';
@@ -156,6 +172,8 @@ const runSearch = debounce(async () => {
   }
 }, 2000);
 
+const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); 
+
 searchInput.addEventListener('input', runSearch);
 document.getElementById('search-form').addEventListener('submit', e => {
   e.preventDefault();
@@ -170,3 +188,5 @@ clearBtn.addEventListener('click', () => {
 });
 
 searchIconContainer.addEventListener('click', expandInputByIconClick);
+
+searchInput.addEventListener('focusout', hideOnClickOutside);
