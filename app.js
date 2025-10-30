@@ -45,7 +45,8 @@ const expandInputByIconClick = () => {
 }
 
 function hideOnClickOutside() {
-  if(searchIconContainer.hidden === true){
+  const query = searchInput.value.trim();
+  if(searchIconContainer.hidden === true && !query){
     searchInput.hidden = true;
     clearBtn.hidden = true;
     searchIconContainer.hidden = false;
@@ -180,7 +181,9 @@ document.getElementById('search-form').addEventListener('submit', e => {
   runSearch();
 });
 
-clearBtn.addEventListener('click', () => {
+clearBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
   searchInput.value = '';
   searchInput.focus();
   resultList.innerHTML = '';
