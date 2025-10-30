@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OMDB - Teste Claro</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header>
+    <h1>OMDB - Teste Claro</h1>
+    <form id="search-form" role="search" aria-label="Buscar títulos">
+      <input id="q" type="search" placeholder="Digite o nome do filme ou série" autocomplete="off"
+        aria-label="Buscar por título" />
+      <button id="clear" type="button">Limpar</button>
+    </form>
+  </header>
+
+  <main>
+    <p id="search-status" aria-live="polite"></p>
+    <section id="results" class="grid" role="list" aria-label="Resultados de busca"></section>
+  </main>
+
+  <template id="card-template">
+    <article class="card" role="listitem" tabindex="0">
+      <img class="poster" alt="Poster"/>
+      <div class="info">
+        <strong class="title">Título</strong>
+        <span class="meta"><span class="type">Tipo</span> • <span class="year">Ano</span></span>
+      </div>
+      <div class="details" hidden></div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
