@@ -29,7 +29,6 @@ const setStatus = (msg = '') => (searchStatus.textContent = msg);
 const getPlaceholderPoster = () => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 180.119 139.794"><g transform="translate(-13.59 -66.639)" paint-order="fill markers stroke"><path fill="#d0d0d0" d="M13.591 66.639H193.71v139.794H13.591z"/><path d="m118.507 133.514-34.249 34.249-15.968-15.968-41.938 41.937H178.726z" opacity=".675" fill="#fff"/><circle cx="58.217" cy="108.555" r="11.773" opacity=".675" fill="#fff"/><path fill="none" d="M26.111 77.634h152.614v116.099H26.111z"/></g></svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-  
 };
 
 const renderResults = items => {
@@ -43,8 +42,14 @@ const renderResults = items => {
     const posterImg = card.querySelector('.poster');
     posterImg.alt = `${item.Title} poster`;
     posterImg.loading = 'lazy';
-    posterImg.onerror = () => (posterImg.src = getPlaceholderPoster());
-    posterImg.src = item.Poster && item.Poster !== 'N/A' ? item.Poster : getPlaceholderPoster();
+    posterImg.onerror = () => {
+      posterImg.src = getPlaceholderPoster();
+    };
+    if (item.Poster && item.Poster !== 'N/A') {
+      posterImg.src = item.Poster;
+    } else {
+      posterImg.src = getPlaceholderPoster();
+    }
 
     card.querySelector('.title').textContent = item.Title;
     card.querySelector('.type').textContent = item.Type;
@@ -65,22 +70,36 @@ const renderResults = items => {
       }
     };
 
-    const hideDetails = () => (detailsEl.hidden = true);
+    const hideDetails = () => {
+      detailsEl.hidden = true;
+    };
 
     card.addEventListener('mouseenter', showDetails);
     card.addEventListener('focusin', showDetails);
     card.addEventListener('mouseleave', hideDetails);
     card.addEventListener('focusout', hideDetails);
-    card.addEventListener('click', () => (detailsEl.hidden ? showDetails() : hideDetails()));
+    card.addEventListener('click', () => {
+      if (detailsEl.hidden) {
+        showDetails();
+      } else {
+        hideDetails();
+      }
+    });
 
     resultList.appendChild(card);
   });
 };
 
 const getSearchResults = async query => {
-  if (!query) return [];
-  if (cacheSearch.has(query)) return cacheSearch.get(query);
-  if (currentAbort) currentAbort.abort();
+  if (!query) {
+    return [];
+  }
+  if (cacheSearch.has(query)) {
+    return cacheSearch.get(query);
+  }
+  if (currentAbort) {
+    currentAbort.abort();
+  }
   currentAbort = new AbortController();
 
   const res = await fetch(searchUrl(query), { signal: currentAbort.signal });
@@ -91,10 +110,14 @@ const getSearchResults = async query => {
 };
 
 const getTitle = async id => {
-  if (cacheTitle.has(id)) return cacheTitle.get(id);
+  if (cacheTitle.has(id)) {
+    return cacheTitle.get(id);
+  }
   const res = await fetch(titleUrl(id));
   const json = await res.json();
-  if (json.Response !== 'True') throw new Error('Título não encontrado');
+  if (json.Response !== 'True') {
+    throw new Error('Título não encontrado');
+  }
   cacheTitle.set(id, json);
   return json;
 };
@@ -110,7 +133,9 @@ const runSearch = debounce(async () => {
   setStatus('Buscando...');
   try {
     const items = await getSearchResults(query);
-    if (query !== currentQuery) return;
+    if (query !== currentQuery) {
+      return;
+    }
     if (items.length === 0) {
       resultList.innerHTML = '';
       setStatus('Nenhum resultado.');
@@ -119,7 +144,9 @@ const runSearch = debounce(async () => {
     renderResults(items);
     setStatus(`${items.length} resultado(s).`);
   } catch (e) {
-    if (e.name !== 'AbortError') setStatus('Falha ao buscar.');
+    if (e.name !== 'AbortError') {
+      setStatus('Falha ao buscar.');
+    }
   }
 }, 2000);
 
