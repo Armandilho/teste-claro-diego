@@ -2,11 +2,24 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg-base: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  --hot-overlay: linear-gradient(
+    to top,
+    rgba(230, 90, 0, 0) 0%,
+    rgba(230, 90, 0, 0.85) 70%,
+    rgba(255, 140, 66, 0.95) 100%
+  );
+}
+
 html,
 body {
   margin: 0;
   font-family: system-ui, Arial, sans-serif;
-  background: #f8f9fa;
+  background: #0F2027;
+  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  background: var(--bg-base); 
   color: #111;
 }
 
@@ -18,8 +31,9 @@ img {
 header {
   padding: 16px;
   text-align: center;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background:
+    var(--hot-overlay),
+    var(--bg-base);
 }
 
 h1 {
