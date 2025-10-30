@@ -19,10 +19,11 @@ const cacheTitle = new Map();
 let currentAbort = null;
 let currentQuery = '';
 
-const inputEl = $('#q');
+const searchInput = $('#search-input');
 const clearBtn = $('#clear');
 const searchStatus = $('#search-status');
 const resultList = $('#results');
+const searchIconContainer = $('#search-icon-container');
 
 const setStatus = (msg = '') => (searchStatus.textContent = msg);
 
@@ -30,6 +31,11 @@ const getPlaceholderPoster = () => {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 180.119 139.794"><g transform="translate(-13.59 -66.639)" paint-order="fill markers stroke"><path fill="#d0d0d0" d="M13.591 66.639H193.71v139.794H13.591z"/><path d="m118.507 133.514-34.249 34.249-15.968-15.968-41.938 41.937H178.726z" opacity=".675" fill="#fff"/><circle cx="58.217" cy="108.555" r="11.773" opacity=".675" fill="#fff"/><path fill="none" d="M26.111 77.634h152.614v116.099H26.111z"/></g></svg>`;
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 };
+
+const expandInputByIconClick = () => {
+  searchInput.setAttribute('style', 'max-width: 500px; display: block;');
+  searchIconContainer.setAttribute('style', 'display: none;');
+}
 
 const renderResults = items => {
   resultList.innerHTML = '';
@@ -123,7 +129,7 @@ const getTitle = async id => {
 };
 
 const runSearch = debounce(async () => {
-  const query = inputEl.value.trim();
+  const query = searchInput.value.trim();
   currentQuery = query;
   if (!query) {
     resultList.innerHTML = '';
@@ -150,15 +156,17 @@ const runSearch = debounce(async () => {
   }
 }, 2000);
 
-inputEl.addEventListener('input', runSearch);
+searchInput.addEventListener('input', runSearch);
 document.getElementById('search-form').addEventListener('submit', e => {
   e.preventDefault();
   runSearch();
 });
 
 clearBtn.addEventListener('click', () => {
-  inputEl.value = '';
-  inputEl.focus();
+  searchInput.value = '';
+  searchInput.focus();
   resultList.innerHTML = '';
   setStatus('');
 });
+
+searchIconContainer.addEventListener('click', expandInputByIconClick);
