@@ -102,8 +102,8 @@ main {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 .card {
@@ -178,4 +178,29 @@ input[type="search"]::-webkit-search-results-decoration {
 
 ::placeholder {
    color:    #fff;
+}
+
+@media (max-width: 600px) {
+  #search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #search-input {
+    width: 100%;
+  }
+  #search-icon-container {
+    align-self: flex-start;
+  }
+
+  #clear {
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 8px;
+    font-size: 1rem;
+    padding: 10px;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
 }
